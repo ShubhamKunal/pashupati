@@ -86,14 +86,14 @@ All unit and widget tests will execute against mocked network layers.
 
 ## 📚 Technical Documentation Index
 
-- [**ARCHITECTURE.md**](ARCHITECTURE.md): System architecture, clean layers, concurrency models, and state management.
-- [**DATABASE.md**](DATABASE.md): PostGIS relational schema, spatial indexes, and migration dictionary.
-- [**API.md**](API.md): Versioned REST API documentation (`/api/v1/`) with DTOs and sample payloads.
-- [**WEBSOCKET_EVENTS.md**](WEBSOCKET_EVENTS.md): Live telematics protocol, subscriptions, and payloads.
-- [**SECURITY.md**](SECURITY.md): Privacy safeguards, phone masking, GPS fuzzing, and rate limiting.
-- [**SETUP.md**](SETUP.md): Local developer setup instructions for Windows, Linux, and macOS.
-- [**DEVELOPMENT.md**](DEVELOPMENT.md): Coding guidelines, testing strategy, and PR standards.
-- [**DEPLOYMENT.md**](DEPLOYMENT.md): Production container builds, Kubernetes/Cloud Run manifests, and CI.
+- [**ARCHITECTURE.md**](docs/ARCHITECTURE.md): System architecture, clean layers, concurrency models, and state management.
+- [**DATABASE.md**](docs/DATABASE.md): PostGIS relational schema, spatial indexes, and migration dictionary.
+- [**API.md**](docs/API.md): Versioned REST API documentation (`/api/v1/`) with DTOs and sample payloads.
+- [**WEBSOCKET_EVENTS.md**](docs/WEBSOCKET_EVENTS.md): Live telematics protocol, subscriptions, and payloads.
+- [**SECURITY.md**](docs/SECURITY.md): Privacy safeguards, phone masking, GPS fuzzing, and rate limiting.
+- [**SETUP.md**](docs/SETUP.md): Local developer setup instructions for Windows, Linux, and macOS.
+- [**DEVELOPMENT.md**](docs/DEVELOPMENT.md): Coding guidelines, testing strategy, and PR standards.
+- [**DEPLOYMENT.md**](docs/DEPLOYMENT.md): Production container builds, Kubernetes/Cloud Run manifests, and CI.
 
 ---
 
