@@ -1,12 +1,17 @@
 # PASHUPATI — REST API Specification (`/api/v1/`)
 
 ## 1. Overview
-All endpoints return JSON responses.
+All endpoints return standard JSON payloads.
 Standard successful responses return `200 OK` or `201 Created`.
 Protected endpoints require:
 ```http
 Authorization: Bearer <jwt_token>
 ```
+
+### 📖 Interactive Swagger & OpenAPI Documentation
+- **Interactive Swagger UI (Browser)**: Open [`docs/swagger.html`](swagger.html) in your browser.
+- **Embedded Server Swagger UI**: Available at `http://localhost:8080/swagger-ui` (or `http://localhost:8080/docs`) when the backend is running.
+- **OpenAPI 3.0 Specification**: [`docs/openapi.yaml`](openapi.yaml) or `http://localhost:8080/api-docs/openapi.yaml`.
 
 ---
 

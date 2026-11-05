@@ -86,6 +86,8 @@ All unit and widget tests will execute against mocked network layers.
 
 ## 📚 Technical Documentation Index
 
+- [**Interactive Swagger UI Console**](docs/swagger.html): Interactive Swagger UI explorer for testing all endpoints.
+- [**OpenAPI 3.0 Specification**](docs/openapi.yaml): Full OpenAPI 3.0 YAML specification with sample request/response payloads.
 - [**ARCHITECTURE.md**](docs/ARCHITECTURE.md): System architecture, clean layers, concurrency models, and state management.
 - [**DATABASE.md**](docs/DATABASE.md): PostGIS relational schema, spatial indexes, and migration dictionary.
 - [**API.md**](docs/API.md): Versioned REST API documentation (`/api/v1/`) with DTOs and sample payloads.

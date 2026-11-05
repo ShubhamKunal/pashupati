@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PASHUPATI — Interactive API Documentation</title>
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@5.18.2/swagger-ui.css" />
+  <link rel="icon" type="image/png" href="../assets/branding/app_logo.png" sizes="32x32" />
+  <style>
+    html {
+      box-sizing: border-box;
+      overflow: -moz-scrollbars-vertical;
+      overflow-y: scroll;
+    }
+    *, *:before, *:after {
+      box-sizing: inherit;
+    }
+    body {
+      margin: 0;
+      background: #fafafa;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .topbar {
+      background-color: #0A3623 !important;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #F5F1E7;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .topbar .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .topbar .badge {
+      background: #D99A45;
+      color: #183B2B;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+    .swagger-ui .topbar { display: none; }
+    .swagger-ui .btn.authorize {
+      border-color: #244D38;
+      color: #244D38;
+    }
+    .swagger-ui .btn.authorize svg {
+      fill: #244D38;
+    }
+    .swagger-ui .opblock.opblock-post .opblock-summary-method {
+      background: #244D38;
+    }
+    .swagger-ui .opblock.opblock-get .opblock-summary-method {
+      background: #183B2B;
+    }
+    .swagger-ui .opblock.opblock-patch .opblock-summary-method {
+      background: #D99A45;
+    }
+    .swagger-ui .opblock.opblock-delete .opblock-summary-method {
+      background: #C85C4A;
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">
+      <span>🐾 PASHUPATI</span>
+      <span class="badge">OpenAPI 3.0</span>
+    </div>
+    <div style="font-size: 0.85rem; opacity: 0.85;">
+      Be the reason a life survives.
+    </div>
+  </div>
+  <div id="swagger-ui"></div>
+
+  <script src="https://unpkg.com/swagger-ui-dist@5.18.2/swagger-ui-bundle.js" charset="UTF-8"></script>
+  <script src="https://unpkg.com/swagger-ui-dist@5.18.2/swagger-ui-standalone-preset.js" charset="UTF-8"></script>
+  <script>
+    window.onload = function() {
+      window.ui = SwaggerUIBundle({
+        url: "./openapi.yaml",
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        plugins: [
+          SwaggerUIBundle.plugins.DownloadUrl
+        ],
+        layout: "BaseLayout",
+        defaultModelsExpandDepth: 2,
+        defaultModelExpandDepth: 2,
+        docExpansion: "list",
+        filter: true
+      });
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,1438 @@
+openapi: 3.0.3
+info:
+  title: PASHUPATI Animal Rescue & Community Dispatch API
+  description: |
+    **Pashupati** (*पशुपति*) — *Be the reason a life survives.*
+    
+    Production-grade mobile and web platform connecting everyday citizens who encounter animals in distress with nearby volunteers, certified responders, NGOs, shelters, and 24/7 veterinary hospitals across India.
+    
+    ### Key Architectural Capabilities
+    - **1-Tap Emergency SOS Broadcast**: Sub-second dispatch with high-accuracy GPS coordinates (`±5m`).
+    - **PostGIS Geofenced Matching**: Spatial indexes (`ST_DWithin`, `ST_Distance`) targeting eligible responders within 3km to 25km.
+    - **Race-Condition-Free Responder Claims**: PostgreSQL row-level locks (`SELECT FOR UPDATE`) preventing duplicate primary dispatches.
+    - **Live Telematics WebSockets**: Real-time bi-directional streaming of responder coordinates, milestones, and ETA countdowns.
+    - **Transactional Outbox Engine**: Guaranteed asynchronous push notification delivery via Firebase Cloud Messaging (FCM).
+  version: 1.0.0
+  contact:
+    name: Pashupati Engineering Team
+    url: https://github.com/ShubhamKunal/pashupati
+servers:
+  - url: http://localhost:8080
+    description: Local Docker / Development Server
+  - url: https://api.pashupati.app
+    description: Production Cloud Monolith
+
+tags:
+  - name: System
+    description: Health checks and service status
+  - name: Authentication
+    description: Phone OTP verification, token refresh, and JWT session handling
+  - name: SOS Emergency
+    description: Incident creation, spatial feeds, duplicate guards, and case resolution
+  - name: Responders & Coordination
+    description: Concurrency-safe rescue acceptance, live ETA progression, and status updates
+  - name: Organizations & Care Directory
+    description: 24/7 trauma centers, veterinary ambulances, and animal shelter directory
+  - name: User Profiles & Volunteers
+    description: Volunteer credentials, response radius, capabilities, and telematics
+  - name: Activity
+    description: Incident tracking, rescue history, and volunteer milestones
+  - name: Notifications
+    description: Device registration, notification inbox, and emergency broadcast filters
+  - name: Media & Uploads
+    description: S3/GCS presigned secure upload URLs for incident photos and voice notes
+  - name: Real-time Telematics
+    description: Duplex WebSocket connection for live telemetry updates
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Enter JWT access token obtained from `/api/v1/auth/otp/verify`.
+
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          example: NOT_FOUND
+        message:
+          type: string
+          example: SOS request with ID 'a0000000-0000-0000-0000-000000000001' was not found.
+        details:
+          type: string
+          nullable: true
+          example: null
+
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          example: healthy
+        service:
+          type: string
+          example: pashupati-backend
+        tagline:
+          type: string
+          example: Be the reason a life survives.
+        version:
+          type: string
+          example: 1.0.0
+
+    RequestOtpDto:
+      type: object
+      required:
+        - phone
+      properties:
+        phone:
+          type: string
+          description: E.164 formatted phone number with country code
+          example: "+919876543210"
+
+    RequestOtpResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Verification code sent successfully.
+        dev_otp:
+          type: string
+          nullable: true
+          description: Returned only in development mode for zero-friction local testing
+          example: "123456"
+
+    VerifyOtpDto:
+      type: object
+      required:
+        - phone
+        - otp
+      properties:
+        phone:
+          type: string
+          example: "+919876543210"
+        otp:
+          type: string
+          example: "123456"
+        name:
+          type: string
+          nullable: true
+          description: Initial user name if registering for the first time
+          example: Aarav Sharma
+
+    AuthResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        token:
+          type: string
+          description: HS256 JWT access token valid for 30 days
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJwaG9uZSI6Iis5MTk4NzY1NDMyMTAiLCJyb2xlIjoiVk9MVU5URUVSIiwiZXhwIjoxNzk5OTk5OTk5fQ.signature
+        user_id:
+          type: string
+          format: uuid
+          example: a0000000-0000-0000-0000-000000000001
+        phone:
+          type: string
+          example: "+919876543210"
+        name:
+          type: string
+          example: Aarav Sharma
+        role:
+          type: string
+          enum: [CITIZEN, VOLUNTEER, RESCUER, VET, NGO_ADMIN]
+          example: VOLUNTEER
+
+    CreateSosDto:
+      type: object
+      required:
+        - animal_type
+        - emergency_type
+        - latitude
+        - longitude
+        - address
+      properties:
+        animal_type:
+          type: string
+          enum: [DOG, CAT, COW, BIRD, OTHER, UNKNOWN]
+          example: DOG
+        emergency_type:
+          type: string
+          enum: [INJURED, ROAD_ACCIDENT, TRAPPED, ABANDONED, SICK, IN_DANGER, OTHER]
+          example: INJURED
+        latitude:
+          type: number
+          format: double
+          minimum: -90
+          maximum: 90
+          example: 12.9772
+        longitude:
+          type: number
+          format: double
+          minimum: -180
+          maximum: 180
+          example: 77.6418
+        accuracy_meters:
+          type: number
+          format: float
+          nullable: true
+          example: 4.8
+        address:
+          type: string
+          example: 12th Main Rd, HAL 2nd Stage, Indiranagar, Bengaluru
+        landmark:
+          type: string
+          nullable: true
+          example: Opposite Corner House Ice Cream, near tree shade
+        description:
+          type: string
+          nullable: true
+          example: Medium indie dog with bleeding left front paw. Calm demeanor, lying on sidewalk.
+        requirements:
+          type: array
+          items:
+            type: string
+            enum: [FIRST_AID, FOOD_WATER, TRANSPORTATION, VETERINARY, SHELTER, PHYSICAL_HELP, ANIMAL_CARRIER, UNSURE]
+          example: [FIRST_AID, TRANSPORTATION]
+        media_urls:
+          type: array
+          items:
+            type: string
+            format: uri
+          example:
+            - https://images.unsplash.com/photo-1543466835-00a7907e9de1
+        voice_memo_url:
+          type: string
+          format: uri
+          nullable: true
+          example: https://storage.pashupati.app/uploads/2026/11/voice-note-8921.m4a
+
+    SosRequestItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: b0000000-0000-0000-0000-000000000001
+        case_number:
+          type: string
+          example: SOS-BLR-8921
+        reporter_id:
+          type: string
+          format: uuid
+          example: a0000000-0000-0000-0000-000000000001
+        reporter_name:
+          type: string
+          example: Aarav Sharma
+        reporter_phone:
+          type: string
+          description: Masked in public feeds for privacy protection
+          example: +91 ••••• ••210
+        animal_type:
+          type: string
+          example: DOG
+        emergency_type:
+          type: string
+          example: INJURED
+        status:
+          type: string
+          enum: [REPORTED, DISPATCHED, EN_ROUTE, ON_SITE, RESOLVED, CANCELLED, EXPIRED]
+          example: DISPATCHED
+        latitude:
+          type: number
+          example: 12.9772
+        longitude:
+          type: number
+          example: 77.6418
+        distance_meters:
+          type: number
+          nullable: true
+          example: 1250.5
+        address:
+          type: string
+          example: Indiranagar 12th Main, Bengaluru
+        landmark:
+          type: string
+          example: Near Corner House Ice Cream
+        description:
+          type: string
+          example: Indie dog with leg wound.
+        primary_responder_id:
+          type: string
+          format: uuid
+          nullable: true
+          example: a0000000-0000-0000-0000-000000000002
+        primary_responder_name:
+          type: string
+          nullable: true
+          example: Dr. Rohan Verma
+        primary_responder_phone:
+          type: string
+          nullable: true
+          example: +919876543211
+        active_responders_count:
+          type: integer
+          example: 1
+        eta_minutes:
+          type: integer
+          nullable: true
+          example: 8
+        media_urls:
+          type: array
+          items:
+            type: string
+          example: [https://images.unsplash.com/photo-1543466835-00a7907e9de1]
+        voice_memo_url:
+          type: string
+          nullable: true
+          example: null
+        requirements:
+          type: array
+          items:
+            type: string
+          example: [FIRST_AID, TRANSPORTATION]
+        created_at:
+          type: string
+          format: date-time
+          example: "2026-11-05T15:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2026-11-05T15:32:00Z"
+
+    SosDetailResponse:
+      type: object
+      properties:
+        sos:
+          $ref: '#/components/schemas/SosRequestItem'
+        responders:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponderItem'
+        milestones:
+          type: array
+          items:
+            $ref: '#/components/schemas/SosMilestoneItem'
+
+    ResponderItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: c0000000-0000-0000-0000-000000000001
+        responder_id:
+          type: string
+          format: uuid
+          example: a0000000-0000-0000-0000-000000000002
+        name:
+          type: string
+          example: Dr. Rohan Verma
+        phone:
+          type: string
+          example: +919876543211
+        avatar_url:
+          type: string
+          nullable: true
+          example: https://images.unsplash.com/photo-1622253692010-333f2da6031d
+        role:
+          type: string
+          enum: [PRIMARY, SECONDARY, BACKUP, TRANSPORT]
+          example: PRIMARY
+        status:
+          type: string
+          enum: [ACCEPTED, EN_ROUTE, ON_SITE, COMPLETED, WITHDRAWN]
+          example: EN_ROUTE
+        eta_minutes:
+          type: integer
+          example: 8
+        vehicle_type:
+          type: string
+          example: TWO_WHEELER
+        equipment_notes:
+          type: string
+          example: Carrying sterile surgical kit and animal transport basket.
+        joined_at:
+          type: string
+          format: date-time
+          example: "2026-11-05T15:31:00Z"
+
+    SosMilestoneItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d0000000-0000-0000-0000-000000000001
+        status:
+          type: string
+          example: DISPATCHED
+        actor_name:
+          type: string
+          example: Dr. Rohan Verma
+        reason:
+          type: string
+          example: Responder accepted case as Primary dispatch.
+        created_at:
+          type: string
+          format: date-time
+          example: "2026-11-05T15:31:00Z"
+
+    AcceptSosDto:
+      type: object
+      properties:
+        response_role:
+          type: string
+          enum: [PRIMARY, SECONDARY, BACKUP, TRANSPORT]
+          default: PRIMARY
+          example: PRIMARY
+        eta_minutes:
+          type: integer
+          minimum: 1
+          maximum: 180
+          example: 8
+        equipment_notes:
+          type: string
+          nullable: true
+          example: First-aid kit and transport cage ready on scooter.
+
+    UpdateResponseDto:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [EN_ROUTE, ON_SITE]
+          example: EN_ROUTE
+        eta_minutes:
+          type: integer
+          nullable: true
+          example: 5
+
+    ResolveSosDto:
+      type: object
+      required:
+        - outcome_notes
+      properties:
+        outcome_notes:
+          type: string
+          example: Wound cleaned and dressed. Dog stabilized and transferred to CUPA Trauma Centre for observation.
+        recovery_image_urls:
+          type: array
+          items:
+            type: string
+            format: uri
+          example:
+            - https://storage.pashupati.app/uploads/2026/11/treated-dog-8921.jpg
+
+    CancelSosDto:
+      type: object
+      required:
+        - reason
+      properties:
+        reason:
+          type: string
+          example: Dog was retrieved by owner before volunteer arrival.
+
+    OrganizationItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: e0000000-0000-0000-0000-000000000001
+        name:
+          type: string
+          example: CUPA 24/7 Trauma Centre & Hospital
+        org_type:
+          type: string
+          enum: [HOSPITAL, SHELTER, NGO, CLINIC, AMBULANCE]
+          example: HOSPITAL
+        description:
+          type: string
+          example: Comprehensive 24/7 emergency veterinary surgery, trauma intensive care, and inpatient wards.
+        address:
+          type: string
+          example: KVAFSU Campus, Hebbal, Bengaluru, Karnataka 560024
+        latitude:
+          type: number
+          example: 13.0334
+        longitude:
+          type: number
+          example: 77.5891
+        distance_meters:
+          type: number
+          nullable: true
+          example: 8400.0
+        phone:
+          type: string
+          example: "+918022947300"
+        emergency_phone:
+          type: string
+          nullable: true
+          example: "+918022947301"
+        website:
+          type: string
+          nullable: true
+          example: https://cupabangalore.org
+        operating_hours:
+          type: string
+          example: 24 Hours / 7 Days
+        is_24_7:
+          type: boolean
+          example: true
+        is_verified:
+          type: boolean
+          example: true
+        facilities:
+          type: array
+          items:
+            type: string
+          example: [EMERGENCY_SURGERY, XRAY, ULTRASOUND, ICU, AMBULANCE]
+
+    UserProfileResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: a0000000-0000-0000-0000-000000000001
+        phone:
+          type: string
+          example: "+919876543210"
+        name:
+          type: string
+          example: Aarav Sharma
+        avatar_url:
+          type: string
+          nullable: true
+          example: https://images.unsplash.com/photo-1535713875002-d1d0cf377fde
+        role:
+          type: string
+          example: VOLUNTEER
+        preferred_language:
+          type: string
+          example: en
+        volunteer_profile:
+          $ref: '#/components/schemas/VolunteerProfileDto'
+
+    VolunteerProfileDto:
+      type: object
+      properties:
+        is_available:
+          type: boolean
+          example: true
+        verification_status:
+          type: string
+          enum: [UNVERIFIED, PENDING, VERIFIED, REJECTED]
+          example: VERIFIED
+        vehicle_type:
+          type: string
+          nullable: true
+          example: TWO_WHEELER
+        capabilities:
+          type: array
+          items:
+            type: string
+          example: [FIRST_AID, TRANSPORTATION, ANIMAL_HANDLING]
+        response_radius_km:
+          type: integer
+          example: 10
+        rescues_completed_count:
+          type: integer
+          example: 42
+        badge_label:
+          type: string
+          nullable: true
+          example: Guardian Rescuer
+
+    UpdateUserDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Aarav S.
+        avatar_url:
+          type: string
+          format: uri
+          example: https://images.unsplash.com/photo-1535713875002-d1d0cf377fde
+        preferred_language:
+          type: string
+          example: hi
+
+    UpdateVolunteerProfileDto:
+      type: object
+      properties:
+        is_available:
+          type: boolean
+          example: true
+        vehicle_type:
+          type: string
+          example: TWO_WHEELER
+        capabilities:
+          type: array
+          items:
+            type: string
+          example: [FIRST_AID, TRANSPORTATION]
+        response_radius_km:
+          type: integer
+          minimum: 1
+          maximum: 50
+          example: 15
+
+    UpdateLocationDto:
+      type: object
+      required:
+        - latitude
+        - longitude
+      properties:
+        latitude:
+          type: number
+          example: 12.9784
+        longitude:
+          type: number
+          example: 77.6408
+
+    NotificationItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: f0000000-0000-0000-0000-000000000001
+        title:
+          type: string
+          example: Critical SOS nearby (1.2 km)
+        body:
+          type: string
+          example: Injured indie dog reported near Indiranagar 12th Main. Responder requested.
+        category:
+          type: string
+          enum: [EMERGENCY_BROADCAST, RESPONDER_UPDATE, OUTCOME_VERIFIED, SYSTEM]
+          example: EMERGENCY_BROADCAST
+        data_json:
+          type: object
+          example:
+            sos_id: b0000000-0000-0000-0000-000000000001
+            case_number: SOS-BLR-8921
+        is_read:
+          type: boolean
+          example: false
+        created_at:
+          type: string
+          format: date-time
+          example: "2026-11-05T15:30:05Z"
+
+    RegisterDeviceDto:
+      type: object
+      required:
+        - fcm_token
+        - device_type
+      properties:
+        fcm_token:
+          type: string
+          example: dX4F8_aBCdE:APA91bFvXYZ1234567890abcdef
+        device_type:
+          type: string
+          enum: [ANDROID, IOS, WEB]
+          example: ANDROID
+
+    NotificationPreferencesDto:
+      type: object
+      properties:
+        emergency_alerts:
+          type: boolean
+          example: true
+        response_updates:
+          type: boolean
+          example: true
+        community_updates:
+          type: boolean
+          example: false
+        radius_km:
+          type: integer
+          example: 10
+
+    PresignUploadDto:
+      type: object
+      required:
+        - file_name
+        - mime_type
+        - file_size_bytes
+      properties:
+        file_name:
+          type: string
+          example: dog_wound_evidence.jpg
+        mime_type:
+          type: string
+          enum: [image/jpeg, image/png, image/webp, audio/m4a, audio/mp4, audio/aac, audio/ogg]
+          example: image/jpeg
+        file_size_bytes:
+          type: integer
+          maximum: 26214400
+          example: 2450800
+
+    PresignUploadResponse:
+      type: object
+      properties:
+        upload_url:
+          type: string
+          format: uri
+          description: Presigned HTTP PUT destination URL
+          example: https://storage.pashupati.app/uploads/2026/11/a0123.jpg?X-Amz-Signature=abc123def
+        public_url:
+          type: string
+          format: uri
+          description: Durable CDN public URL to store in incident records
+          example: https://storage.pashupati.app/uploads/2026/11/a0123.jpg
+        key:
+          type: string
+          example: uploads/2026/11/a0123.jpg
+
+    UserActivityResponse:
+      type: object
+      properties:
+        reported_sos:
+          type: array
+          items:
+            $ref: '#/components/schemas/SosRequestItem'
+        responses_participated:
+          type: array
+          items:
+            $ref: '#/components/schemas/SosRequestItem'
+        rescues_resolved_count:
+          type: integer
+          example: 12
+
+paths:
+  /health:
+    get:
+      tags:
+        - System
+      summary: Health check and service heartbeat
+      description: Returns service availability status, tagline, and current build version.
+      responses:
+        '200':
+          description: Service is healthy and connected to database pool.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+
+  /api/v1/auth/otp/request:
+    post:
+      tags:
+        - Authentication
+      summary: Request phone verification code (OTP)
+      description: Sends an SMS verification code to the given phone number. In development mode, `dev_otp` is included in the response.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestOtpDto'
+      responses:
+        '200':
+          description: OTP dispatched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestOtpResponse'
+        '400':
+          description: Invalid phone number format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/auth/otp/verify:
+    post:
+      tags:
+        - Authentication
+      summary: Verify OTP and create/retrieve session
+      description: Validates the 6-digit OTP, creates user record if new, and returns a signed JWT bearer token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyOtpDto'
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Invalid or expired OTP code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/sos:
+    post:
+      tags:
+        - SOS Emergency
+      summary: Broadcast a new animal emergency (SOS)
+      description: Persists an emergency request, saves media and triage requirements, and enqueues background notifications in the same atomic transaction.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSosDto'
+      responses:
+        '200':
+          description: Emergency broadcast published and dispatched to nearby responders
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SosRequestItem'
+        '400':
+          description: Missing address or invalid coordinates
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or expired authentication token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/sos/nearby:
+    get:
+      tags:
+        - SOS Emergency
+      summary: Search active emergency dispatches within spatial radius
+      description: Queries PostGIS for active animal incidents within `radius_km` of the caller's coordinates.
+      parameters:
+        - name: latitude
+          in: query
+          required: true
+          schema:
+            type: number
+            example: 12.9784
+        - name: longitude
+          in: query
+          required: true
+          schema:
+            type: number
+            example: 77.6408
+        - name: radius_km
+          in: query
+          required: false
+          schema:
+            type: number
+            default: 10.0
+            example: 10.0
+        - name: animal_type
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [DOG, CAT, COW, BIRD, OTHER]
+            example: DOG
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [REPORTED, DISPATCHED, EN_ROUTE, ON_SITE]
+            example: REPORTED
+      responses:
+        '200':
+          description: List of matching active emergency cases sorted by distance
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SosRequestItem'
+
+  /api/v1/sos/check-duplicates:
+    get:
+      tags:
+        - SOS Emergency
+      summary: Check potential duplicate incidents nearby
+      description: Evaluates geographic distance and reporting time window to prevent redundant cases for the same animal.
+      parameters:
+        - name: latitude
+          in: query
+          required: true
+          schema:
+            type: number
+            example: 12.9772
+        - name: longitude
+          in: query
+          required: true
+          schema:
+            type: number
+            example: 77.6418
+        - name: animal_type
+          in: query
+          required: true
+          schema:
+            type: string
+            example: DOG
+        - name: radius_meters
+          in: query
+          required: false
+          schema:
+            type: number
+            default: 500.0
+            example: 300.0
+      responses:
+        '200':
+          description: Existing incidents found within spatial proximity
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SosRequestItem'
+
+  /api/v1/sos/{id}:
+    get:
+      tags:
+        - SOS Emergency
+      summary: Retrieve detailed emergency dossier & milestone history
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: b0000000-0000-0000-0000-000000000001
+      responses:
+        '200':
+          description: Full incident details with active responders and progression milestones
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SosDetailResponse'
+        '404':
+          description: SOS request not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/sos/{id}/cancel:
+    post:
+      tags:
+        - SOS Emergency
+      summary: Cancel an active emergency request
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelSosDto'
+      responses:
+        '200':
+          description: SOS marked as cancelled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SosDetailResponse'
+        '400':
+          description: Case is already resolved or in an invalid state for cancellation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/sos/{id}/resolve:
+    post:
+      tags:
+        - SOS Emergency
+      summary: Mark rescue as safely resolved with outcome notes
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResolveSosDto'
+      responses:
+        '200':
+          description: Rescue resolved and outcome recorded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SosDetailResponse'
+
+  /api/v1/sos/{sos_id}/responders:
+    get:
+      tags:
+        - Responders & Coordination
+      summary: List all active responders assigned to an emergency
+      parameters:
+        - name: sos_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Array of assigned responders with vehicle type, status, and ETA
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponderItem'
+
+  /api/v1/sos/{sos_id}/respond:
+    post:
+      tags:
+        - Responders & Coordination
+      summary: Accept an emergency dispatch (Concurrency-safe)
+      description: Locks the SOS row (`FOR UPDATE`) to ensure only one volunteer claims Primary dispatch, preventing race conditions.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: sos_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptSosDto'
+      responses:
+        '200':
+          description: Response claimed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SosDetailResponse'
+        '409':
+          description: Primary responder role already claimed by another rescuer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    patch:
+      tags:
+        - Responders & Coordination
+      summary: Update responder progression status or ETA
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: sos_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateResponseDto'
+      responses:
+        '200':
+          description: Status updated (e.g. EN_ROUTE or ON_SITE)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SosDetailResponse'
+
+    delete:
+      tags:
+        - Responders & Coordination
+      summary: Withdraw response from an assigned emergency
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: sos_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Response withdrawn; case reverted to REPORTED if primary responder withdrew
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SosDetailResponse'
+
+  /api/v1/organizations:
+    get:
+      tags:
+        - Organizations & Care Directory
+      summary: List registered animal-care organizations
+      responses:
+        '200':
+          description: All active verified shelters, clinics, and trauma centers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationItem'
+
+  /api/v1/organizations/nearby:
+    get:
+      tags:
+        - Organizations & Care Directory
+      summary: Search nearby emergency hospitals, shelters, and ambulances
+      parameters:
+        - name: latitude
+          in: query
+          required: true
+          schema:
+            type: number
+            example: 12.9784
+        - name: longitude
+          in: query
+          required: true
+          schema:
+            type: number
+            example: 77.6408
+        - name: radius_km
+          in: query
+          required: false
+          schema:
+            type: number
+            default: 25.0
+            example: 20.0
+        - name: org_type
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [HOSPITAL, SHELTER, NGO, CLINIC, AMBULANCE]
+        - name: is_24_7
+          in: query
+          required: false
+          schema:
+            type: boolean
+            example: true
+      responses:
+        '200':
+          description: Nearby care facilities sorted by road distance
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationItem'
+
+  /api/v1/organizations/{id}:
+    get:
+      tags:
+        - Organizations & Care Directory
+      summary: Get details of a specific organization
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Detailed organization profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationItem'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/users/me:
+    get:
+      tags:
+        - User Profiles & Volunteers
+      summary: Retrieve current authenticated user profile
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Profile, volunteer credentials, and rescue statistics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+
+    patch:
+      tags:
+        - User Profiles & Volunteers
+      summary: Update user profile details
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDto'
+      responses:
+        '200':
+          description: Updated user profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+
+  /api/v1/users/me/volunteer-profile:
+    patch:
+      tags:
+        - User Profiles & Volunteers
+      summary: Toggle volunteer availability, response radius, and vehicle
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateVolunteerProfileDto'
+      responses:
+        '200':
+          description: Updated volunteer dispatch settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+
+  /api/v1/users/me/location:
+    post:
+      tags:
+        - User Profiles & Volunteers
+      summary: Update volunteer live GPS location
+      description: Keeps the volunteer's spatial dispatch location current in PostGIS.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLocationDto'
+      responses:
+        '200':
+          description: Location updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+  /api/v1/activity:
+    get:
+      tags:
+        - Activity
+      summary: Retrieve user rescue history and contributions
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User's reported cases, joined rescues, and resolved count
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserActivityResponse'
+
+  /api/v1/notifications:
+    get:
+      tags:
+        - Notifications
+      summary: Retrieve in-app notification inbox
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of notifications for user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NotificationItem'
+
+  /api/v1/notifications/{id}/read:
+    patch:
+      tags:
+        - Notifications
+      summary: Mark notification as read
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Notification marked as read
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+  /api/v1/notifications/devices/register:
+    post:
+      tags:
+        - Notifications
+      summary: Register FCM push device token
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDeviceDto'
+      responses:
+        '200':
+          description: Device token registered for push notifications
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+  /api/v1/notifications/preferences:
+    get:
+      tags:
+        - Notifications
+      summary: Get notification preferences
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User notification preferences
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationPreferencesDto'
+
+    patch:
+      tags:
+        - Notifications
+      summary: Update notification preferences
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationPreferencesDto'
+      responses:
+        '200':
+          description: Preferences updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationPreferencesDto'
+
+  /api/v1/uploads/presign:
+    post:
+      tags:
+        - Media & Uploads
+      summary: Obtain presigned S3/GCS URL for incident media
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PresignUploadDto'
+      responses:
+        '200':
+          description: Presigned upload URL generated (expires in 15 minutes)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PresignUploadResponse'
+
+  /api/v1/ws:
+    get:
+      tags:
+        - Real-time Telematics
+      summary: Establish duplex WebSocket connection
+      description: |
+        Upgrades HTTP connection to WebSocket protocol.
+        
+        ### Client Messages:
+        - `{"type": "SUBSCRIBE_SOS", "sos_id": "uuid"}`
+        - `{"type": "UNSUBSCRIBE_SOS", "sos_id": "uuid"}`
+        - `{"type": "TELEMETRY_UPDATE", "latitude": 12.978, "longitude": 77.641, "speed_kmh": 28.5, "heading": 90.0}`
+        
+        ### Server Messages:
+        - `{"type": "TELEMETRY_BROADCAST", "session_id": "uuid", "sos_id": "uuid", "latitude": 12.978, "longitude": 77.641, "speed_kmh": 28.5, "heading": 90.0, "timestamp": "2026-11-05T15:32:00Z"}`
+        - `{"type": "STATUS_CHANGED", "sos_id": "uuid", "new_status": "EN_ROUTE", "actor_id": "uuid", "timestamp": "2026-11-05T15:32:00Z"}`
+      parameters:
+        - name: token
+          in: query
+          required: false
+          description: Optional JWT query param for authenticated telematics session
+          schema:
+            type: string
+      responses:
+        '101':
+          description: Switching Protocols to WebSocket
