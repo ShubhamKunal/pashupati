@@ -1436,3 +1436,4 @@ paths:
       responses:
         '101':
           description: Switching Protocols to WebSocket
+
