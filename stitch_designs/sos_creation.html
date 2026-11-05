@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Report Animal Emergency - Pashupati</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface": "#fdf9ef",
+            "tertiary-container": "#633d00",
+            "error-container": "#ffdad6",
+            "background": "#fdf9ef",
+            "surface-variant": "#e6e2d8",
+            "on-secondary-fixed": "#002113",
+            "surface-tint": "#3e6750",
+            "on-tertiary-container": "#e7a650",
+            "primary": "#0a3623",
+            "on-surface": "#1c1c16",
+            "primary-fixed": "#bfedd0",
+            "on-surface-variant": "#414943",
+            "surface-container-lowest": "#ffffff",
+            "outline-variant": "#c1c8c1",
+            "on-error": "#ffffff",
+            "surface-container-highest": "#e6e2d8",
+            "surface-container-low": "#f7f3e9",
+            "on-tertiary": "#ffffff",
+            "surface-dim": "#dddad0",
+            "tertiary": "#452900",
+            "on-primary-fixed": "#002112",
+            "surface-bright": "#fdf9ef",
+            "inverse-surface": "#31312a",
+            "secondary-fixed": "#c4ecd4",
+            "tertiary-fixed": "#ffddb7",
+            "primary-container": "#244d38",
+            "inverse-on-surface": "#f4f0e6",
+            "on-error-container": "#93000a",
+            "surface-container-high": "#ece8de",
+            "on-primary": "#ffffff",
+            "tertiary-fixed-dim": "#fdb961",
+            "secondary-container": "#c4ecd4",
+            "secondary": "#436653",
+            "secondary-fixed-dim": "#a9cfb9",
+            "primary-fixed-dim": "#a4d1b5",
+            "on-background": "#1c1c16",
+            "on-primary-fixed-variant": "#264f39",
+            "surface-container": "#f2eee4",
+            "inverse-primary": "#a4d1b5",
+            "outline": "#717973",
+            "error": "#ba1a1a",
+            "on-tertiary-fixed": "#2a1700",
+            "on-secondary-fixed-variant": "#2b4e3d",
+            "on-primary-container": "#91bda2",
+            "on-secondary-container": "#486c59",
+            "on-secondary": "#ffffff",
+            "on-tertiary-fixed-variant": "#653e00"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter": "1rem",
+            "space-lg": "1.5rem",
+            "space-sm": "0.5rem",
+            "space-xl": "2rem",
+            "margin": "1rem",
+            "margin-tablet": "2rem",
+            "gutter-desktop": "2rem",
+            "margin-desktop": "3rem",
+            "gutter-tablet": "1.5rem",
+            "space-md": "1rem",
+            "space-xs": "0.25rem"
+          },
+          "fontFamily": {
+            "headline-md": ["Epilogue"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "label-lg": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "headline-xl-mobile": ["Epilogue"],
+            "headline-xl": ["Epilogue"],
+            "headline-lg-mobile": ["Epilogue"],
+            "headline-sm": ["Epilogue"],
+            "headline-lg": ["Epilogue"],
+            "label-md": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }],
+            "headline-xl-mobile": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "500" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+    }
+    .custom-pulse-sos {
+      box-shadow: 0 0 0 0 rgba(186, 26, 26, 0.45);
+      animation: pulse-ring 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+    }
+    @keyframes pulse-ring {
+      0% {
+        box-shadow: 0 0 0 0 rgba(186, 26, 26, 0.5);
+      }
+      70% {
+        box-shadow: 0 0 0 12px rgba(186, 26, 26, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(186, 26, 26, 0);
+      }
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased min-h-screen flex flex-col items-center selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Mobile View Container (~390px simulated wrapper) -->
+<div class="w-full max-w-[420px] min-h-screen flex flex-col bg-surface shadow-2xl relative pb-36">
+<!-- Top Bar Navigation (Task-Focused: Suppressed global shell to prioritize emergency workflow) -->
+<header class="sticky top-0 z-40 bg-surface/95 backdrop-blur-md px-space-md pt-space-md pb-space-sm shadow-sm transition-all">
+<div class="flex items-center justify-between gap-space-sm mb-space-xs">
+<button aria-label="Go back" class="w-10 h-10 -ml-2 rounded-full flex items-center justify-center text-primary hover:bg-surface-container active:scale-95 transition-transform" type="button">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="flex-1 text-center">
+<h1 class="font-headline-sm text-headline-sm text-primary tracking-tight font-bold">Report Animal Emergency</h1>
+</div>
+<button class="px-space-sm py-1 rounded-full bg-secondary-container hover:bg-secondary-fixed text-primary font-label-sm text-label-sm tracking-wide transition-all active:scale-95 shadow-sm" type="button">
+          Fast Submit
+        </button>
+</div>
+<!-- Step Indicator & Stepper Progress -->
+<div class="pt-1 pb-1">
+<div class="flex justify-between items-center text-on-surface-variant font-label-md text-label-md mb-1.5">
+<span class="font-semibold text-primary">Step 2 of 3</span>
+<span class="text-on-surface-variant font-medium">Animal &amp; Situation</span>
+</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden flex">
+<div class="bg-primary-container h-full w-2/3 rounded-full transition-all duration-300"></div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="px-space-md pt-space-sm space-y-space-md">
+<!-- Live Location Pin Banner -->
+<section class="bg-secondary-container/40 rounded-xl p-space-sm flex items-start gap-space-sm border border-secondary/20 shadow-sm">
+<div class="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center shrink-0 mt-0.5 text-on-primary">
+<span class="material-symbols-outlined" data-icon="location_on" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1">
+<span class="font-label-sm text-label-sm text-primary font-bold tracking-wider">LIVE GPS LOCKED</span>
+<span class="inline-flex items-center gap-1 font-body-sm text-body-sm text-secondary font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span> ±5m accuracy
+            </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface font-semibold truncate mt-0.5">Near Metro Pillar 84, Indiranagar</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Bengaluru, Karnataka 560038</p>
+</div>
+<button class="shrink-0 px-2.5 py-1.5 rounded-lg bg-surface-container-lowest text-primary font-label-sm text-label-sm shadow-sm hover:bg-surface active:scale-95 border border-outline-variant/40 flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-sm" data-icon="edit_location">edit_location</span>
+          Edit
+        </button>
+</section>
+<!-- Section 1: Animal Category -->
+<section class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm text-primary font-bold">1. Animal Category</h2>
+<span class="font-label-sm text-label-sm text-outline font-semibold">TAP TO SELECT</span>
+</div>
+<div class="grid grid-cols-5 gap-2 pt-1">
+<!-- Dog (Selected) -->
+<button class="flex flex-col items-center justify-center p-2 rounded-xl bg-primary-container text-on-primary shadow-md border-2 border-primary ring-2 ring-primary/20 active:scale-95 transition-all" type="button">
+<div class="w-11 h-11 rounded-full bg-surface/15 flex items-center justify-center mb-1">
+<span class="material-symbols-outlined text-2xl" data-icon="pets" style="font-variation-settings: 'FILL' 1;">pets</span>
+</div>
+<span class="font-label-md text-label-md font-bold tracking-tight">Dog</span>
+</button>
+<!-- Cat -->
+<button class="flex flex-col items-center justify-center p-2 rounded-xl bg-surface-container-lowest text-on-surface-variant shadow-sm border border-outline-variant/60 hover:bg-surface-container-low active:scale-95 transition-all" type="button">
+<div class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center mb-1 text-primary">
+<span class="material-symbols-outlined text-2xl" data-icon="cruelty_free">cruelty_free</span>
+</div>
+<span class="font-label-md text-label-md font-medium">Cat</span>
+</button>
+<!-- Cow / Cattle -->
+<button class="flex flex-col items-center justify-center p-2 rounded-xl bg-surface-container-lowest text-on-surface-variant shadow-sm border border-outline-variant/60 hover:bg-surface-container-low active:scale-95 transition-all" type="button">
+<div class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center mb-1 text-primary">
+<span class="material-symbols-outlined text-2xl" data-icon="agriculture">agriculture</span>
+</div>
+<span class="font-label-md text-label-md font-medium">Cattle</span>
+</button>
+<!-- Bird -->
+<button class="flex flex-col items-center justify-center p-2 rounded-xl bg-surface-container-lowest text-on-surface-variant shadow-sm border border-outline-variant/60 hover:bg-surface-container-low active:scale-95 transition-all" type="button">
+<div class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center mb-1 text-primary">
+<span class="material-symbols-outlined text-2xl" data-icon="flutter">flutter</span>
+</div>
+<span class="font-label-md text-label-md font-medium">Bird</span>
+</button>
+<!-- Other -->
+<button class="flex flex-col items-center justify-center p-2 rounded-xl bg-surface-container-lowest text-on-surface-variant shadow-sm border border-outline-variant/60 hover:bg-surface-container-low active:scale-95 transition-all" type="button">
+<div class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center mb-1 text-primary">
+<span class="material-symbols-outlined text-2xl" data-icon="category">category</span>
+</div>
+<span class="font-label-md text-label-md font-medium">Other</span>
+</button>
+</div>
+</section>
+<!-- Section 2: Emergency Situation -->
+<section class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm text-primary font-bold">2. Emergency Situation</h2>
+<span class="font-label-sm text-label-sm text-error font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-sm" data-icon="warning">warning</span> Triage Mode
+          </span>
+</div>
+<div class="flex flex-wrap gap-2 pt-1">
+<!-- Road Accident / Hit & Run -->
+<button class="flex items-center gap-2 px-3 py-2 rounded-xl bg-surface-container-lowest border border-error/50 hover:bg-error-container/30 active:scale-95 transition-all shadow-sm" type="button">
+<span class="w-2.5 h-2.5 rounded-full bg-error shrink-0 animate-ping"></span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Road Accident / Hit &amp; Run</span>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-error text-on-error">SOS</span>
+</button>
+<!-- Injured / Bleeding (Selected) -->
+<button class="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-error text-on-error shadow-md active:scale-95 transition-all ring-2 ring-error/30 font-semibold" type="button">
+<span class="material-symbols-outlined text-base" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-md text-label-md text-on-error">Injured / Bleeding</span>
+</button>
+<!-- Trapped / In Danger -->
+<button class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/60 text-on-surface hover:bg-surface-container-low active:scale-95 transition-all shadow-sm" type="button">
+<span class="material-symbols-outlined text-base text-tertiary-container" data-icon="crisis_alert">crisis_alert</span>
+<span class="font-label-md text-label-md text-on-surface font-medium">Trapped / In Danger</span>
+</button>
+<!-- Abandoned / Sick -->
+<button class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/60 text-on-surface hover:bg-surface-container-low active:scale-95 transition-all shadow-sm" type="button">
+<span class="material-symbols-outlined text-base text-outline" data-icon="sick">sick</span>
+<span class="font-label-md text-label-md text-on-surface font-medium">Abandoned / Sick</span>
+</button>
+<!-- Extreme Abuse -->
+<button class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/60 text-on-surface hover:bg-surface-container-low active:scale-95 transition-all shadow-sm" type="button">
+<span class="material-symbols-outlined text-base text-error" data-icon="report">report</span>
+<span class="font-label-md text-label-md text-on-surface font-medium">Extreme Abuse</span>
+</button>
+</div>
+</section>
+<!-- Section 3: Photo / Evidence Upload -->
+<section class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm text-primary font-bold">3. Photo / Evidence Upload</h2>
+<span class="font-label-sm text-label-sm text-secondary font-bold">1 photo + 1 voice note</span>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-space-sm border border-outline-variant/60 shadow-sm space-y-space-sm">
+<!-- Photo Preview Container -->
+<div class="relative w-full h-44 rounded-lg overflow-hidden group shadow-inner">
+<img class="w-full h-full object-cover" data-alt="A distressed brown street indie dog sitting patiently on an Indian sidewalk in Indiranagar Bengaluru with a makeshift cloth bandage wrapped gently around its right front paw. Warm daylight illuminates the realistic urban street environment with earthy tones of deep green, ochre, and warm dust, conveying compassionate rescue urgency and realistic street-level texture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDql2wXbnqaGotAvUSKXWJmN8sZZQkbdTXFjqst9eyF0ZtjDOeMX2M1gQZkZJ4Kr-ETWugTfDov-CDQsnrx8_0aN3T2SFWnWzMrjAJ0oahdgdUJgAvdy2h-ns0UTj_yYSTX5O98cDzQwOTTY5zn6qHYIynVdEUP42W2w2tNRub1ZSQZwiwAb89i1_JNtJYe5KUcnHlq-OClXTmzkkQqZoXt_xNjuBeC9urnHS8YdrDY"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+<div class="absolute top-2 left-2 flex items-center gap-1.5 px-2 py-1 rounded bg-black/60 backdrop-blur-md text-white font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-xs text-secondary-fixed" data-icon="check_circle">check_circle</span>
+<span>photo_stray_dog_indiranagar.jpg</span>
+</div>
+<button aria-label="Delete image" class="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 active:scale-95 transition-transform" type="button">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</button>
+<!-- Bottom Actions inside Image Card -->
+<div class="absolute bottom-2 left-2 right-2 flex items-center justify-between">
+<span class="px-2 py-0.5 rounded-full bg-primary/80 backdrop-blur-md text-on-primary font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" data-icon="medical_services">medical_services</span> Paw injury visible
+              </span>
+<button class="px-2.5 py-1 rounded-lg bg-surface text-primary font-label-sm text-label-sm font-bold shadow hover:bg-surface-container active:scale-95 flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-xs" data-icon="add_a_photo">add_a_photo</span> Add More
+              </button>
+</div>
+</div>
+<!-- Quick Mic Voice Note Bar -->
+<div class="flex items-center justify-between px-3 py-2.5 rounded-lg bg-secondary-container/30 border border-secondary/20">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-base" data-icon="graphic_eq">graphic_eq</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-primary font-bold">Voice memo attached (12s)</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">"Dog is breathing normally, calm temperament"</p>
+</div>
+</div>
+<button aria-label="Play recording" class="p-1 rounded text-primary hover:bg-secondary-container/60 active:scale-95" type="button">
+<span class="material-symbols-outlined" data-icon="play_circle" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Section 4: What is needed immediately? -->
+<section class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm text-primary font-bold">4. What is needed immediately?</h2>
+<span class="font-label-sm text-label-sm text-outline font-semibold">MULTI-SELECT</span>
+</div>
+<div class="flex flex-wrap gap-2 pt-1">
+<!-- First-aid supplies (Checked) -->
+<button class="flex items-center gap-1.5 px-3 py-2 rounded-full bg-primary-container text-on-primary shadow-sm active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-base" data-icon="check" style="font-variation-settings: 'wght' 700;">check</span>
+<span class="font-label-md text-label-md font-semibold">First-aid supplies</span>
+</button>
+<!-- Transportation to clinic (Checked) -->
+<button class="flex items-center gap-1.5 px-3 py-2 rounded-full bg-primary-container text-on-primary shadow-sm active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-base" data-icon="check" style="font-variation-settings: 'wght' 700;">check</span>
+<span class="font-label-md text-label-md font-semibold">Transportation to clinic</span>
+</button>
+<!-- Temporary shelter (Unchecked) -->
+<button class="flex items-center gap-1.5 px-3 py-2 rounded-full bg-surface-container-lowest text-on-surface-variant border border-outline-variant/60 hover:bg-surface-container active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-base text-outline" data-icon="add">add</span>
+<span class="font-label-md text-label-md font-medium">Temporary shelter</span>
+</button>
+<!-- Physical assistance (Checked) -->
+<button class="flex items-center gap-1.5 px-3 py-2 rounded-full bg-primary-container text-on-primary shadow-sm active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-base" data-icon="check" style="font-variation-settings: 'wght' 700;">check</span>
+<span class="font-label-md text-label-md font-semibold">Physical assistance</span>
+</button>
+<!-- Animal carrier (Unchecked) -->
+<button class="flex items-center gap-1.5 px-3 py-2 rounded-full bg-surface-container-lowest text-on-surface-variant border border-outline-variant/60 hover:bg-surface-container active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-base text-outline" data-icon="add">add</span>
+<span class="font-label-md text-label-md font-medium">Animal carrier</span>
+</button>
+<!-- Not sure (Unchecked) -->
+<button class="flex items-center gap-1.5 px-3 py-2 rounded-full bg-surface-container-lowest text-on-surface-variant border border-outline-variant/60 hover:bg-surface-container active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-base text-outline" data-icon="help_outline">help_outline</span>
+<span class="font-label-md text-label-md font-medium">Not sure</span>
+</button>
+</div>
+</section>
+<!-- Section 5: Optional Note -->
+<section class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-headline-sm text-headline-sm text-primary font-bold" for="optional-notes">5. Field Landmark / Clues</label>
+<span class="font-label-sm text-label-sm text-outline font-medium">Optional</span>
+</div>
+<div class="relative rounded-xl bg-surface-container-lowest border border-outline-variant/60 p-space-sm focus-within:border-primary focus-within:ring-1 focus-within:ring-primary shadow-sm">
+<textarea class="w-full bg-transparent border-0 p-0 text-on-surface font-body-md text-body-md focus:ring-0 resize-none placeholder:text-outline-variant" id="optional-notes" placeholder="Help rescuer locate the spot..." rows="2">Brown indie dog, limping on front right paw, friendly, sheltered under tea stall next to pharmacy.</textarea>
+<div class="flex items-center justify-between pt-1 border-t border-surface-container-high text-on-surface-variant font-label-sm text-label-sm">
+<span class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-xs" data-icon="mic">mic</span> Dictation active
+            </span>
+<span>84 / 200 chars</span>
+</div>
+</div>
+</section>
+<!-- Community Dispatch Telemetry Capsule -->
+<div class="rounded-xl p-space-sm bg-surface-container flex items-center justify-between border border-outline-variant/40">
+<div class="flex items-center gap-2">
+<div class="flex -space-x-2 overflow-hidden">
+<div class="inline-block h-6 w-6 rounded-full ring-2 ring-surface bg-primary text-on-primary flex items-center justify-center font-label-sm text-[10px]">KA</div>
+<div class="inline-block h-6 w-6 rounded-full ring-2 ring-surface bg-secondary text-on-secondary flex items-center justify-center font-label-sm text-[10px]">VN</div>
+<div class="inline-block h-6 w-6 rounded-full ring-2 ring-surface bg-tertiary-container text-on-tertiary-container flex items-center justify-center font-label-sm text-[10px]">+12</div>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-medium">14 active volunteers within 2.5 km</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-bold flex items-center gap-0.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span> Live Radar
+        </span>
+</div>
+</main>
+<!-- Bottom Sticky Action Bar (Emergency Trigger) -->
+<div class="fixed bottom-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur-lg px-space-md py-space-sm border-t border-surface-container-highest shadow-2xl flex flex-col items-center max-w-[420px] mx-auto">
+<!-- Primary Emergency Button -->
+<button class="w-full h-14 rounded-xl bg-error hover:bg-[#a61515] active:bg-[#8f1212] text-on-error font-headline-sm text-headline-sm font-bold flex items-center justify-center gap-2 shadow-lg custom-pulse-sos active:scale-[0.98] transition-all tracking-wide" type="button">
+<span class="material-symbols-outlined text-2xl" data-icon="emergency_share" style="font-variation-settings: 'FILL' 1;">emergency_share</span>
+<span>PUBLISH SOS ALERT NOW</span>
+</button>
+<!-- Dispatch Context & Privacy Guarantee -->
+<div class="w-full flex items-center justify-between pt-2 px-1 text-on-surface-variant font-label-sm text-label-sm">
+<span class="flex items-center gap-1 font-medium text-primary">
+<span class="material-symbols-outlined text-xs" data-icon="notifications_active">notifications_active</span> Notifies 14 nearby rescuers
+        </span>
+<span class="flex items-center gap-1 text-outline">
+<span class="material-symbols-outlined text-xs" data-icon="lock">lock</span> Phone masked
+        </span>
+</div>
+</div>
+</div>
+</body></html>

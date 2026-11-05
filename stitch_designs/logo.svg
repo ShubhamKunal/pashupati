@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="pashuGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#244D38"/>
+      <stop offset="100%" stop-color="#183B2B"/>
+    </linearGradient>
+    <linearGradient id="saffronGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E5A952"/>
+      <stop offset="100%" stop-color="#D99A45"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="#F5F1E7"/>
+  <circle cx="256" cy="256" r="210" fill="#E9F1E9" stroke="#244D38" stroke-width="4" stroke-opacity="0.15"/>
+  <!-- Nurturing hand cupping a paw emblem -->
+  <g transform="translate(256, 265)">
+    <!-- Central main pad styled like a heart & protective cupping hand -->
+    <path d="M0,60 C-55,60 -95,15 -90,-45 C-85,-95 -25,-120 0,-70 C25,-120 85,-95 90,-45 C95,15 55,60 0,60 Z" fill="url(#pashuGrad)"/>
+    <!-- Gentle protective lower cradle curve -->
+    <path d="M-110,35 C-70,120 70,120 110,35 C85,85 -85,85 -110,35 Z" fill="url(#saffronGrad)"/>
+    <!-- Outer paw pads / droplets of life -->
+    <ellipse cx="-85" cy="-95" rx="26" ry="34" transform="rotate(-28 -85 -95)" fill="url(#pashuGrad)"/>
+    <ellipse cx="-32" cy="-145" rx="26" ry="36" transform="rotate(-10 -32 -145)" fill="url(#pashuGrad)"/>
+    <ellipse cx="32" cy="-145" rx="26" ry="36" transform="rotate(10 32 -145)" fill="url(#pashuGrad)"/>
+    <ellipse cx="85" cy="-95" rx="26" ry="34" transform="rotate(28 85 -95)" fill="url(#pashuGrad)"/>
+    <!-- Small saffron heart spark at center pad -->
+    <circle cx="0" cy="-20" r="14" fill="#F5F1E7" opacity="0.95"/>
+    <path d="M0,-28 C-8,-38 -20,-24 0,-6 C20,-24 8,-38 0,-28 Z" fill="url(#saffronGrad)"/>
+  </g>
+</svg>

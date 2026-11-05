@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pashupati - Street Animal Emergency Network</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface": "#fdf9ef",
+            "tertiary-container": "#633d00",
+            "error-container": "#ffdad6",
+            "background": "#fdf9ef",
+            "surface-variant": "#e6e2d8",
+            "on-secondary-fixed": "#002113",
+            "surface-tint": "#3e6750",
+            "on-tertiary-container": "#e7a650",
+            "primary": "#0a3623",
+            "on-surface": "#1c1c16",
+            "primary-fixed": "#bfedd0",
+            "on-surface-variant": "#414943",
+            "surface-container-lowest": "#ffffff",
+            "outline-variant": "#c1c8c1",
+            "on-error": "#ffffff",
+            "surface-container-highest": "#e6e2d8",
+            "surface-container-low": "#f7f3e9",
+            "on-tertiary": "#ffffff",
+            "surface-dim": "#dddad0",
+            "tertiary": "#452900",
+            "on-primary-fixed": "#002112",
+            "surface-bright": "#fdf9ef",
+            "inverse-surface": "#31312a",
+            "secondary-fixed": "#c4ecd4",
+            "tertiary-fixed": "#ffddb7",
+            "primary-container": "#244d38",
+            "inverse-on-surface": "#f4f0e6",
+            "on-error-container": "#93000a",
+            "surface-container-high": "#ece8de",
+            "on-primary": "#ffffff",
+            "tertiary-fixed-dim": "#fdb961",
+            "secondary-container": "#c4ecd4",
+            "secondary": "#436653",
+            "secondary-fixed-dim": "#a9cfb9",
+            "primary-fixed-dim": "#a4d1b5",
+            "on-background": "#1c1c16",
+            "on-primary-fixed-variant": "#264f39",
+            "surface-container": "#f2eee4",
+            "inverse-primary": "#a4d1b5",
+            "outline": "#717973",
+            "error": "#ba1a1a",
+            "on-tertiary-fixed": "#2a1700",
+            "on-secondary-fixed-variant": "#2b4e3d",
+            "on-primary-container": "#91bda2",
+            "on-secondary-container": "#486c59",
+            "on-secondary": "#ffffff",
+            "on-tertiary-fixed-variant": "#653e00"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter": "1rem",
+            "space-lg": "1.5rem",
+            "space-sm": "0.5rem",
+            "space-xl": "2rem",
+            "margin": "1rem",
+            "margin-tablet": "2rem",
+            "gutter-desktop": "2rem",
+            "margin-desktop": "3rem",
+            "gutter-tablet": "1.5rem",
+            "space-md": "1rem",
+            "space-xs": "0.25rem"
+          },
+          "fontFamily": {
+            "headline-md": ["Epilogue"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "label-lg": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "headline-xl-mobile": ["Epilogue"],
+            "headline-xl": ["Epilogue"],
+            "headline-lg-mobile": ["Epilogue"],
+            "headline-sm": ["Epilogue"],
+            "headline-lg": ["Epilogue"],
+            "label-md": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "600"}],
+            "body-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+            "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+            "label-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700"}],
+            "headline-xl-mobile": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+            "headline-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+            "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+            "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+            "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+            "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "500"}]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    @keyframes subtle-pulse {
+      0%, 100% { transform: scale(1); opacity: 0.85; }
+      50% { transform: scale(1.06); opacity: 0.4; }
+    }
+    .pulse-ring-1 {
+      animation: subtle-pulse 3s infinite ease-in-out;
+    }
+    .pulse-ring-2 {
+      animation: subtle-pulse 3s infinite ease-in-out 1.2s;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased flex flex-col min-h-screen selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Top App Bar (Shared Components standard: headline "Pashupati") -->
+<header class="sticky top-0 z-40 bg-surface dark:bg-surface shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center w-full px-space-md py-space-sm max-w-screen-md mx-auto">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed" data-icon="location_on" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<span class="font-headline-md text-headline-md font-semibold text-primary dark:text-primary-fixed">Pashupati</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<!-- Live Alert Audio / Quick Radio Indicator -->
+<div class="hidden sm:flex items-center gap-1.5 px-3 py-1 bg-surface-container rounded-full text-secondary">
+<span class="w-2 h-2 rounded-full bg-error animate-ping"></span>
+<span class="font-label-sm text-label-sm">BLR DISPATCH LIVE</span>
+</div>
+<button aria-label="Notifications" class="relative p-2 rounded-full hover:bg-surface-container-high dark:hover:bg-surface-container-high active:scale-95 transition-transform duration-150 text-on-surface-variant dark:text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-error rounded-full ring-2 ring-surface"></span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Canvas Container -->
+<main class="flex-1 w-full max-w-screen-md mx-auto px-space-md pt-space-xs pb-28 flex flex-col gap-space-lg">
+<!-- User Profile & Micro-Location Pill -->
+<section class="flex flex-col gap-space-sm pt-space-xs">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-md">
+<div class="relative">
+<img alt="Aarav avatar" class="w-12 h-12 rounded-full object-cover ring-2 ring-primary-container/20 shadow-sm" data-alt="Close-up professional portrait of Aarav, a calm South Asian animal welfare volunteer in his late twenties wearing a warm earthy forest-green volunteer vest. Soft warm morning sunlight highlights his face against a subtle outdoor background with muted leafy greens and warm ivory hues, reflecting empathetic field rescue readiness." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAU_LrTPeFatduAR7fPZanVNMurrhfBCj6nrbsl6afoJIsTY49c67DjsM48olLOwmG2iO2cQ0IoE15wBolH5oxgY7CQksKYMhKR5tbhAjiapqZCYEX8nqbm8sNxYnSFBgXvvYh7WuF2l4V14DVHiQyt0GeJmvvVbOfA7QJ81D5taWJGwq9mj9NabP57DMlt1mB4k5V4wy-HRqn-NvvBK_R9gx2inmmPORU39amA52ZJ"/>
+<span class="absolute -bottom-1 -right-1 bg-primary text-on-primary rounded-full p-0.5 border-2 border-surface flex items-center justify-center">
+<span class="material-symbols-outlined text-[13px]" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-primary">Namaste, Aarav</span>
+</div>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+              Verified First Responder
+            </span>
+</div>
+</div>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors active:scale-95" title="Switch responder status">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+</button>
+</div>
+<!-- Real-time Geo-Tag Lock Pill -->
+<div class="flex items-center justify-between bg-surface-container-lowest px-space-md py-2.5 rounded-xl border border-outline-variant/30 shadow-[0_2px_8px_rgba(24,59,43,0.04)]">
+<div class="flex items-center gap-2 overflow-hidden">
+<span class="material-symbols-outlined text-secondary flex-shrink-0 text-[18px]" data-icon="near_me" style="font-variation-settings: 'FILL' 1;">near_me</span>
+<span class="font-label-md text-label-md text-on-surface truncate">
+            Indiranagar, Bengaluru <span class="text-on-surface-variant font-normal">• GPS (±8m)</span>
+</span>
+</div>
+<button class="flex items-center gap-0.5 font-label-sm text-label-sm text-primary hover:text-primary-container flex-shrink-0 active:scale-95 transition-transform">
+<span>Change</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="keyboard_arrow_down">keyboard_arrow_down</span>
+</button>
+</div>
+</section>
+<!-- HERO EMERGENCY SOS TRIGGER (Level 4 Extrusion) -->
+<section class="flex flex-col items-center justify-center pt-space-xs pb-space-sm">
+<div class="text-center mb-space-md">
+<span class="font-label-sm text-label-sm tracking-widest text-error uppercase font-bold">EMERGENCY DISPATCH</span>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mt-0.5">An animal needs help?</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">We mobilize nearest volunteers &amp; medics immediately.</p>
+</div>
+<!-- Circular Concentric Ripple Target -->
+<div class="relative flex items-center justify-center my-2">
+<!-- Ripple Outer Layer 2 -->
+<div class="pulse-ring-2 absolute w-64 h-64 rounded-full bg-error-container/40 -z-10"></div>
+<!-- Ripple Outer Layer 1 -->
+<div class="pulse-ring-1 absolute w-52 h-52 rounded-full bg-error-container/70 -z-10"></div>
+<!-- The Big Physical SOS Button -->
+<button class="group relative w-44 h-44 rounded-full bg-gradient-to-b from-[#D96B58] to-[#BA4836] text-white flex flex-col items-center justify-center p-space-md shadow-[0_12px_28px_rgba(186,26,26,0.42)] active:scale-95 active:shadow-[0_4px_12px_rgba(186,26,26,0.35)] transition-all duration-200 border-4 border-[#ffdad6]/60 cursor-pointer">
+<div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mb-1 group-active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[28px] text-white" data-icon="crisis_alert" style="font-variation-settings: 'FILL' 1;">crisis_alert</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-white tracking-tight leading-none text-center">REPORT<br/>ANIMAL SOS</span>
+<span class="mt-1 font-label-sm text-label-sm text-white/90 font-medium tracking-wide">Press &amp; Hold</span>
+</button>
+</div>
+<div class="mt-space-md flex flex-wrap items-center justify-center gap-space-sm">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[15px] text-secondary" data-icon="bolt">bolt</span>
+<span>Alerts responders in &lt; 30s</span>
+</div>
+<button class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm hover:opacity-90 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[15px]" data-icon="photo_camera">photo_camera</span>
+<span>1-Tap Fast Photo Report</span>
+</button>
+</div>
+</section>
+<!-- COMMUNITY RESCUE PULSE -->
+<section>
+<div class="bg-surface-container-lowest rounded-xl p-space-md border border-outline-variant/30 shadow-[0px_4px_16px_rgba(24,59,43,0.06)] flex items-center justify-between">
+<div class="flex items-center gap-space-md">
+<div class="w-11 h-11 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined" data-icon="health_and_safety" style="font-variation-settings: 'FILL' 1;">health_and_safety</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#D99A45] animate-ping"></span>
+<h3 class="font-headline-sm text-headline-sm text-primary">3 Active Rescues Nearby</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">1 Responder currently en route to 100ft Road</p>
+</div>
+</div>
+<div class="pl-2">
+<span class="material-symbols-outlined text-outline" data-icon="arrow_forward_ios">arrow_forward_ios</span>
+</div>
+</div>
+</section>
+<!-- ACTIVE NEARBY SOS REQUESTS (Bento / Cards) -->
+<section class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<h2 class="font-headline-sm text-headline-sm text-primary">Critical Incidents</h2>
+<span class="px-2 py-0.5 bg-error-container text-on-error-container rounded-full font-label-sm text-label-sm font-bold">2 Live</span>
+</div>
+<button class="font-label-md text-label-md text-primary font-semibold hover:underline">View Map View</button>
+</div>
+<!-- Incident Card 1 -->
+<article class="bg-surface-container-lowest rounded-xl p-space-md border border-outline-variant/30 shadow-[0px_4px_16px_rgba(24,59,43,0.06)] flex flex-col gap-space-sm">
+<div class="flex items-start gap-space-md">
+<img alt="Injured Indie Dog thumbnail" class="w-20 h-20 rounded-lg object-cover flex-shrink-0 border border-surface-container-high" data-alt="Compassionate, natural street scene in Bengaluru showing a golden-tan Indian pariah stray dog resting gently under a shaded sidewalk tree, sporting a clear bandage collar applied by caring volunteers. Muted street background with lush tropical foliage and warm earthly light, depicting respectful care without graphic distress." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWaqU4Qb8txCHPrq6jTYKpKjaohPtrJGWqjvdpn-UzeTO5ydLa1Cw-2_GVqx7AML-3kTNfSJp04-cKi2p3NUmx63Frfh86HJ-aCzRb3sTTTWkvhvXSJcm0aXk5hoqkyJK-5LXzmfFeVm1T88XcsffH9_W7XUdxlXxYfd8ktr3I54TLPO0IqyQQouGPJXkKruOi4-XiBI5Rd_Rv0yPKQHdvTVLkVAhJCvErT7fzDdTN"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1 mb-1">
+<span class="px-2 py-0.5 rounded-full font-label-sm text-label-sm bg-tertiary-fixed text-on-tertiary-fixed flex items-center gap-1 font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                En Route
+              </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">450m away</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface truncate">Injured Indie Dog</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1 mt-0.5">
+              Deep leg wound near 12th Main junction, resting by tea stall
+            </p>
+<div class="flex items-center gap-2 mt-2 font-label-sm text-label-sm text-secondary">
+<span class="material-symbols-outlined text-[16px]" data-icon="groups">groups</span>
+<span>2 Responders en route</span>
+</div>
+</div>
+</div>
+<div class="pt-space-xs flex items-center justify-between border-t border-surface-container-high">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[15px]" data-icon="schedule">schedule</span>
+<span>Reported 8m ago</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="px-3 py-1.5 rounded-lg border border-outline-variant text-on-surface font-label-md text-label-md hover:bg-surface-container active:scale-95 transition-transform flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="call">call</span>
+<span>Lead</span>
+</button>
+<button class="px-4 py-1.5 rounded-lg bg-primary-container text-white font-label-md text-label-md hover:bg-primary active:scale-95 transition-transform shadow-sm">
+              View Details
+            </button>
+</div>
+</div>
+</article>
+<!-- Incident Card 2 -->
+<article class="bg-surface-container-lowest rounded-xl p-space-md border border-outline-variant/30 shadow-[0px_4px_16px_rgba(24,59,43,0.06)] flex flex-col gap-space-sm">
+<div class="flex items-start gap-space-md">
+<img alt="Trapped Kitten in storm drain" class="w-20 h-20 rounded-lg object-cover flex-shrink-0 border border-surface-container-high" data-alt="Tender high-angle documentary photo of a tiny calico kitten safe inside a warm woven rescue basket wrapped in a soft natural cotton towel. Natural daylight filters from above with warm wood and stone tones, showcasing compassionate neighborhood veterinary assistance in Bangalore." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwAGJV87kKpsEAZt9zlbS95Tivko7eu5vkHBKQjqG2NxEuomyjF7ioHtOFOFdBcekGKUTVWLlgFeW_zHVPmlKyjLetBhw720NcvC69U80lC22Nd3V1bHa-LyM78pcimgGNUnXGHfUPYOySUG6lZvob3Nx9wmmfaDN7d7TX_JpLbIo7I5BIOn1rlx2mV_gmXKdUNIKmTbKhyPQSiYDy6Uab2rtLyiHhJlWRi_X1j2cV"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1 mb-1">
+<span class="px-2 py-0.5 rounded-full font-label-sm text-label-sm bg-error-container text-on-error-container font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                Seeking Help
+              </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">1.2 km away</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface truncate">Trapped Kitten</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1 mt-0.5">
+              Storm drain grate near CMH Road metro station entrance
+            </p>
+<div class="inline-flex items-center gap-1 mt-2 px-2 py-0.5 rounded bg-surface-container text-tertiary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[15px]" data-icon="handyman">handyman</span>
+<span>Needed: Animal carrier &amp; torch</span>
+</div>
+</div>
+</div>
+<div class="pt-space-xs flex items-center justify-between border-t border-surface-container-high">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[15px]" data-icon="schedule">schedule</span>
+<span>Reported 14m ago</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="px-4 py-1.5 rounded-lg bg-primary-container text-white font-label-md text-label-md hover:bg-primary active:scale-95 transition-transform shadow-sm">
+              I Can Assist
+            </button>
+</div>
+</div>
+</article>
+</section>
+<!-- NEARBY VETERINARY & ANIMAL CARE FACILITIES -->
+<section class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm text-primary">Emergency Trauma Centers</h2>
+<span class="font-label-md text-label-md text-secondary">Verified 24/7</span>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-space-md border border-outline-variant/30 shadow-[0px_4px_16px_rgba(24,59,43,0.06)] flex flex-col gap-space-sm">
+<div class="flex items-start justify-between">
+<div class="flex items-start gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined" data-icon="local_hospital" style="font-variation-settings: 'FILL' 1;">local_hospital</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface leading-snug">CUPA Second Chance Sanctuary &amp; Trauma Centre</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                Veterinary Ambulance • Full Surgical Unit • ICU Care
+              </p>
+<div class="flex items-center gap-3 mt-2">
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-[#0a3623] font-bold bg-secondary-container px-2 py-0.5 rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-[#0a3623]"></span>
+                  Open 24/7
+                </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">2.4 km away</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Row -->
+<div class="grid grid-cols-2 gap-space-sm pt-space-xs mt-1">
+<a class="h-10 px-3 rounded-lg bg-error text-white font-label-md text-label-md flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-transform hover:opacity-90" href="tel:08022947307">
+<span class="material-symbols-outlined text-[18px]" data-icon="call" style="font-variation-settings: 'FILL' 1;">call</span>
+<span>Call Emergency</span>
+</a>
+<button class="h-10 px-3 rounded-lg bg-surface-container text-primary font-label-md text-label-md flex items-center justify-center gap-1.5 border border-outline-variant/40 hover:bg-surface-container-high active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[18px]" data-icon="directions">directions</span>
+<span>Navigate</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- BOTTOM NAVIGATION BAR (Strict Shared Component Specification) -->
+<nav aria-label="Bottom Navigation" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-space-md py-space-sm bg-surface-container-lowest dark:bg-surface-container-high shadow-lg dark:shadow-none">
+<!-- Item 1: Home (Active based on context) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary-container text-on-secondary-container dark:text-on-secondary-container rounded-full px-space-md py-space-xs active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm mt-0.5">Home</span>
+</a>
+<!-- Item 2: Explore (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-space-md py-space-xs hover:bg-surface-container dark:hover:bg-surface-container active:scale-95 transition-transform duration-150 rounded-full" href="#">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="font-label-sm text-label-sm mt-0.5">Explore</span>
+</a>
+<!-- Item 3: My Activity (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-space-md py-space-xs hover:bg-surface-container dark:hover:bg-surface-container active:scale-95 transition-transform duration-150 rounded-full" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="font-label-sm text-label-sm mt-0.5">My Activity</span>
+</a>
+<!-- Item 4: Profile (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-space-md py-space-xs hover:bg-surface-container dark:hover:bg-surface-container active:scale-95 transition-transform duration-150 rounded-full" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm mt-0.5">Profile</span>
+</a>
+</nav>
+<!-- Interactive Haptic Micro-Interaction Simulation -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sosButton = document.querySelector('.group.relative.w-44.h-44');
+      if (sosButton) {
+        let pressTimer;
+        
+        sosButton.addEventListener('pointerdown', () => {
+          sosButton.classList.add('scale-95');
+          pressTimer = setTimeout(() => {
+            if (navigator.vibrate) navigator.vibrate([100, 50, 200]);
+            alert('Emergency SOS Signal Broadcasted! Responders within 1.5km notified with GPS location.');
+          }, 800);
+        });
+
+        const cancelPress = () => {
+          sosButton.classList.remove('scale-95');
+          clearTimeout(pressTimer);
+        };
+
+        sosButton.addEventListener('pointerup', cancelPress);
+        sosButton.addEventListener('pointerleave', cancelPress);
+      }
+    });
+  </script>
+</body></html>
